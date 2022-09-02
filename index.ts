@@ -135,4 +135,30 @@ else{
 }
 })
 
+
+app.patch('/residents/:id', (req, res)=>{
+    const id=Number(req.params.id)
+    const newName=req.body.name
+    const newAge=Number(req.body.age)
+    const gender=req.body.gender
+
+const residentToSend=residents.find(resident=> resident.id===id)
+if(residentToSend){
+    if(newName){
+        residentToSend.name=newName
+    }
+    if(newAge){
+        residentToSend.age=newAge
+    }
+    if(gender){
+        residentToSend.gender=gender
+    }
+    res.send(residentToSend)
+}
+else{
+    res.status(404).send("Resident not Found!")
+}
+})
+
+
 app.listen(port)
