@@ -29,6 +29,26 @@ app.get("/houses", (req, res) => {
     res.send(housesToSend)
 })
 
+app.get("/houses/:id", (req, res)=>{
+    const id=Number(req.params.id)
+    let houseToSend=houses.find(house=>house.id===id)
+    let residentsOfHouse = residents.filter(resident => resident.houseId === id)
+    if(houseToSend) {
+        res.send({ houseToSend, residents: residentsOfHouse }) 
+    }
+    else res.status(404).send("House not found!")
+})
+
+app.get("/residents/:id", (req, res)=>{
+    const id=Number(req.params.id)
+    let resident=residents.find(resident=>resident.id===id)
+    let house = houses.find(house => house.id === resident?.houseId)
+    if(resident) {
+        res.send({ resident, house }) 
+    }
+    else res.status(404).send("House not found!")
+})
+
 app.get("/residents", (req, res) => {
     let residentsToSend = residents.map(resident => {
         let house = houses.find(house => house.id === resident.houseId)
@@ -93,6 +113,26 @@ app.post('/residents', (req, res)=>{
     else{
         res.status(400).send({errors: errors})
     }
+})
+
+app.patch('/houses/:id', (req, res)=>{
+const id=Number(req.params.id)
+const newAddress=req.body.address
+const newType=req.body.type
+
+let match=houses.find(house=>house.id===id)
+if(match){
+    if(newAddress){
+        match.address=newAddress
+    }
+    if(newType){
+        match.type=newType
+    }
+    res.send(match)
+}
+else{
+    res.status(404).send("House not found!")
+}
 })
 
 app.listen(port)
