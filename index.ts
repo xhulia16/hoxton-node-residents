@@ -2,6 +2,9 @@ import express from 'express'
 import cors  from 'cors'
 import { houses, residents } from './data'
 
+let housesData=houses
+let residentsData=residents
+
 const app = express()
 const port = 5000
 app.use(express.json())
@@ -158,6 +161,18 @@ if(residentToSend){
 else{
     res.status(404).send("Resident not Found!")
 }
+})
+
+app.delete('/houses/:id', (req, res)=>{
+    const id=Number(req.params.id)
+    housesData=houses.filter(house=> house.id !== id)
+    res.send("house deleted sucessfully!")
+})
+
+app.delete('/residents/:id', (req, res)=>{
+    const id=Number(req.params.id)
+    residentsData=residents.filter(resident=> resident.id !== id)
+    res.send("resident deleted sucessfully!")
 })
 
 
